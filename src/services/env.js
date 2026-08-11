@@ -2,6 +2,23 @@
 // @ts-check
 
 /* eslint-disable @typescript-eslint/no-var-requires */
+// Load a committed .env.production (or .env) when present so the Next build can
+// run without platform-provided environment variables during an import. This
+// helps Vercel do the initial build when users haven't yet entered secrets in
+// the project settings. The file should contain only placeholders — DO NOT
+// commit real secrets.
+const fs = require('fs');
+try {
+  const dotenv = require('dotenv');
+  if (fs.existsSync('.env.production')) {
+    dotenv.config({ path: '.env.production' });
+  } else if (fs.existsSync('.env')) {
+    dotenv.config();
+  }
+} catch (e) {
+  // Ignore if dotenv isn't available in the environment.
+}
+
 const { z } = require('zod');
 
 /*eslint sort-keys: "error"*/
